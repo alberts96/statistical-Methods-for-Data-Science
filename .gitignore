@@ -1,0 +1,5 @@
+*.Rdata
+/info
+/SMD giambo
+.Rproj.user
+dfAB.csv
