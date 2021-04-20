@@ -4,7 +4,8 @@ pacman::p_load( pacman, sm, dplyr, hrbrthemes, GGally, ggplot2, ggthemes,
                ggvis, httr, lubridate, pylotly, rio, rmarkdown, shiny,
                stringr, tidyr)
 pacman::p_load(  sm)
-
+library(ggplot2)
+library(stringr)
 table(df$year)
 year = 2018 #2018 is the most populet year
 dfA1 <- dfAB[dfAB$year==year,]
@@ -52,5 +53,34 @@ for (ateco in unique(dfA1$ATECO10)){
 ### Distribution for age  ###
 ###################################
 
-p<-ggplot(dfA1, aes(x=age, fill=status)) + geom_density(alpha=0.4)
+p<-ggplot(dfA1, aes(x=age, fill=status)) + geom_density(alpha=0.4) + scale_fill_manual(values=c("green", "red"))
 p
+
+
+##APPLY THIS IN A FOR LOOP FOR ALL LEGAL FORMS
+
+for (form in unique(dfA1$'Legal form')){
+  
+  df = dfA1[dfA1$`Legal form`==form,]
+  
+  ggplot(df, aes(x=age, fill=status)) + geom_density(alpha=0.4) +
+    ggtitle(str_c('Active and failed for "',form,'" in ',year)) +
+    scale_fill_manual(values=c("green", "red"))
+  
+  ggsave(str_c("img/A/1/LegalForm/age/",form,".jpg"))
+}
+
+
+##APPLY THIS IN A FOR LOOP FOR ALL ATECO CODES
+
+for (ateco in unique(dfA1$ATECO10)){
+  
+  df = dfA1[dfA1$`ATECO10`== ateco,]
+  
+  ggplot(df, aes(x=age, fill=status)) + geom_density(alpha=0.4) +
+    ggtitle(str_c('Active and failed for "',ateco,'" in ',year))+ 
+    scale_fill_manual(values=c("green", "red"))
+  
+  ggsave(str_c("img/A/1/ATECO/age/",str_sub(ateco, 1, 3),".jpg"))
+}
+
