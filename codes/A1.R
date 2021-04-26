@@ -53,7 +53,7 @@ for (ateco in unique(dfA1$ATECO10)){
 ### Distribution for age  ###
 ###################################
 
-p<-ggplot(dfA1, aes(x=age, fill=status)) + geom_density(alpha=0.4) + scale_fill_manual(values=c("green", "red"))
+p<-ggplot(dfA1, aes(x=age, fill=status)) + geom_density(alpha=0.4) + scale_fill_manual(values=c("#04bc3c", "#fc746c"))
 p
 
 
@@ -65,7 +65,7 @@ for (form in unique(dfA1$'Legal form')){
   
   ggplot(df, aes(x=age, fill=status)) + geom_density(alpha=0.4) +
     ggtitle(str_c('Active and failed for "',form,'" in ',year)) +
-    scale_fill_manual(values=c("green", "red"))
+    scale_fill_manual(values=c("#04bc3c", "#fc746c"))
   
   ggsave(str_c("img/A/1/LegalForm/age/",form,".jpg"))
 }
@@ -79,7 +79,7 @@ for (ateco in unique(dfA1$ATECO10)){
   
   ggplot(df, aes(x=age, fill=status)) + geom_density(alpha=0.4) +
     ggtitle(str_c('Active and failed for "',ateco,'" in ',year))+ 
-    scale_fill_manual(values=c("green", "red"))
+    scale_fill_manual(values=c("#04bc3c", "#fc746c"))
   
   ggsave(str_c("img/A/1/ATECO/age/",str_sub(ateco, 1, 3),".jpg"))
 }
