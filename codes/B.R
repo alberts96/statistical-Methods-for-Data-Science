@@ -43,13 +43,10 @@ legend(1, 95, col=palette,legend=c(dfb$`Legal form`),
 
 #AGE
 
-barplot(prop.table(table(dfb$size)) , main='Failed by year and legal form',
-        xlab="Size",  beside=TRUE)
+ggplot(dfb, aes(x=age, color=legalform, legend=FALSE)) + geom_density(size=0.5, alpha=0.4)+
+  ggtitle(str_c('Failed companies by  legal form')) 
+  #(palette='Dark2')
 
-
-ggplot(dfb, aes(x=age, color=`region`)) + geom_density(size=0.8, alpha=0.4)
-
-ggplot(dfb, aes(x=age, fill=dfb$`Legal form`)) + geom_density(alpha=0.4)
 
 
 #################################
