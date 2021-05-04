@@ -37,7 +37,7 @@ for (form in unique(dfA1$'Legal form')){
 
 ##APPLY THIS IN A FOR LOOP FOR ALL ATECO CODES
 
-for (ateco in unique(dfA1$ATECO10)){
+for (ateco in unique(dfA1$ATECO)){
   jpeg(str_c("img/A/1/ATECO/size/",str_sub(ateco, 1, 3),".jpg"))
   df = dfA1[dfA1$`ATECO10`==ateco,]
   barplot(prop.table(table(df$status,df$size), 1) , main=str_c('Active and failed for "',ateco,'" in ',year),
@@ -73,7 +73,7 @@ for (form in unique(dfA1$'Legal form')){
 
 ##APPLY THIS IN A FOR LOOP FOR ALL ATECO CODES
 
-for (ateco in unique(dfA1$ATECO10)){
+for (ateco in unique(dfA1$ATECO)){
   
   df = dfA1[dfA1$`ATECO10`== ateco,]
   

@@ -68,72 +68,73 @@ df$`ATECO10` = substr(df$`ATECO 2007code`, start = 1, stop = 2)
 
 
 
-df$ATECO10[df$ATECO10 == "01" | 
+df$ATECO[df$ATECO10 == "01" | 
                                df$ATECO10 == "02" |
                                df$ATECO10 == "03"] <- "(A)Pesca e Agricoltura"
 
-df$ATECO10[df$ATECO10 == "05" | 
+df$ATECO[df$ATECO10 == "05" | 
                                df$ATECO10 == "06" |
                                df$ATECO10 == "07"|
                                df$ATECO10 == "08"|
                                df$ATECO10 == "09"] <- "(B)Estrazione Minerali"
 
-df$ATECO10[df$ATECO10 >= "10" & 
+df$ATECO[df$ATECO10 >= "10" & 
                                df$ATECO10 <= "33"] <- "(C)Manifattura"
 
-df$ATECO10[df$ATECO10 == "35"] <- "(D)Fornitura Gas/Ele"
+df$ATECO[df$ATECO10 == "35"] <- "(D)Fornitura Gas/Ele"
 
-df$ATECO10[df$ATECO10 >= "36" & 
+df$ATECO[df$ATECO10 >= "36" & 
                                df$ATECO10 <= "39"] <- "(E)Gestione Fogne e Rifiuti"
 
-df$ATECO10[df$ATECO10 >= "41" & 
+df$ATECO[df$ATECO10 >= "41" & 
                                df$ATECO10 <= "43"] <- "(F)Costruzioni"
 
-df$ATECO10[df$ATECO10 >= "45" & 
+df$ATECO[df$ATECO10 >= "45" & 
                                df$ATECO10 <= "47"] <- "(G)Commercio"
 
-df$ATECO10[df$ATECO10 >= "49" & 
+df$ATECO[df$ATECO10 >= "49" & 
                                df$ATECO10 <= "53"] <- "(H)Trasporti e Magazzinaggio"
 
-df$ATECO10[df$ATECO10 >= "55" & 
+df$ATECO[df$ATECO10 >= "55" & 
                                df$ATECO10 <= "56"] <- "(I)Servizi: Alloggio e Ristorazione"
 
-df$ATECO10[df$ATECO10 >= "58" & 
+df$ATECO[df$ATECO10 >= "58" & 
                                df$ATECO10 <= "63"] <- "(J)Servizi: ICT"
 
-df$ATECO10[df$ATECO10 >= "64" & 
+df$ATECO[df$ATECO10 >= "64" & 
                                df$ATECO10 <= "66"] <- "(K)Servizi: Finanza e Assic."
 
-df$ATECO10[df$ATECO10 == "68"] <- "(L)Servizi: Immobiliari"
+df$ATECO[df$ATECO10 == "68"] <- "(L)Servizi: Immobiliari"
 
-df$ATECO10[df$ATECO10 >= "69" & 
+df$ATECO[df$ATECO10 >= "69" & 
                                df$ATECO10 <= "75"] <- "(M)Servizi: Consulenza e attività scientifiche"
 
-df$ATECO10[df$ATECO10 >= "77" & 
+df$ATECO[df$ATECO10 >= "77" & 
                                df$ATECO10 <= "82"] <- "(N)Servizi: Viaggi e Noleggio"
 
-df$ATECO10[df$ATECO10 == "84"] <- "(O)Servizi: Amm. Pubblica e Difesa"
+df$ATECO[df$ATECO10 == "84"] <- "(O)Servizi: Amm. Pubblica e Difesa"
 
-df$ATECO10[df$ATECO10 == "85"] <- "(P)Servizi: IStruzione"
+df$ATECO[df$ATECO10 == "85"] <- "(P)Servizi: IStruzione"
 
-df$ATECO10[df$ATECO10 >= "86" & 
+df$ATECO[df$ATECO10 >= "86" & 
                                df$ATECO10 <= "88"] <- "(Q)Servizi: Sanità e Ass. Sociale"
 
-df$ATECO10[df$ATECO10 >= "90" & 
+df$ATECO[df$ATECO10 >= "90" & 
                                df$ATECO10 <= "93"] <- "(R)Attività sportive, artistiche e intratt."
 
-df$ATECO10[df$ATECO10 >= "94" & 
+df$ATECO[df$ATECO10 >= "94" & 
                                df$ATECO10 <= "96"] <- "(S)Altre attività"
 
-df$ATECO10[df$ATECO10 >= "97" & 
+df$ATECO[df$ATECO10 >= "97" & 
                                df$ATECO10 <= "98"] <- "(T)Personale Domestico"
 
-df$ATECO10[df$ATECO10 == "99"] <- "(U)Organismi extra territoriali"
+df$ATECO[df$ATECO10 == "99"] <- "(U)Organismi extra territoriali"
 
 df<-df[!(df$ATECO10=="00"),]
 
 
 table(df$`ATECO10`)
+table(df$`ATECO`)
 
 #ACTIVED OR FAILED
 df$`active` = 0
@@ -143,6 +144,8 @@ df$`active`[df$`Legal status`== "Active (receivership)"] = 1
 
 table(df$`active`)
 
+df$status = "active"
+df$status[df$active == 0] = "failed"
 
 #Rename
 df$'region' = df$'Registered office address - Region'
@@ -164,11 +167,11 @@ df$`Legal form`[
                   df$'Legal form'!= "S.A.S."  &
                   df$'Legal form'!= "Consortium"] = 'Other'
 
-
+names(df)
 
 
 rownames(df) = df$`Tax code number` #set tax code as index
-dfAB = df[, c("Legal form", "active", "age", "region", "ATECO10", "size", "year","Incorporation year")]
+dfAB = df[, c("Legal form", "active", "age", "region", "ateco","status","ATECO","ATECO10", "size", "year","Incorporation year")]
 
 
 write.csv(dfAB,"dfAB.csv")

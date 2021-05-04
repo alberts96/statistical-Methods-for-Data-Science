@@ -2,7 +2,7 @@ library(ggplot2)
 library(stringr)
 library(magrittr) # needs to be run every time you start R and want to use %>%
 library(dplyr)
-
+library(RColorBrewer)
 ####PREPARATION#####
 
 dfb <- dfAB[dfAB$status=='failed',]
@@ -17,6 +17,7 @@ dim(dfb)
 
 
 table(dfb$`ATECO10`)
+
 
 
 #################################
@@ -52,30 +53,80 @@ ggplot(dfb, aes(x=age, color=legalform, legend=FALSE)) + geom_density(size=0.5, 
 #################################
 ########### REGION    ###########
 
-getZones <- function(dfb) {
-  dfb$zone[dfb$`region`== "Sicilia" ] <- "isole"
-  dfb$zone[dfb$`region`== "Sardegna" ] <- "isole"
-  dfb$zone[dfb$`region`== "Calabria" ] <- "sud"
-  dfb$zone[dfb$`region`== "Basilicata" ] <- "sud"
-  dfb$zone[dfb$`region`== "Abruzzo" ] <- "sud"
-  dfb$zone[dfb$`region`== "Molise" ] <- "sud"
-  dfb$zone[dfb$`region`== "Campania" ] <- "sud"
-  dfb$zone[dfb$`region`== "Puglia" ] <- "sud"
-  dfb$zone[dfb$`region`== "Toscana" ] <- "centro"
-  dfb$zone[dfb$`region`== "Umbria" ] <- "centro"
-  dfb$zone[dfb$`region`== "Marche" ] <- "centro"
-  dfb$zone[dfb$`region`== "Lazio" ] <- "centro"           
-  dfb$zone[dfb$`region`== "Trentino-Alto Adige" ] <- "nord est"
-  dfb$zone[dfb$`region`== "Veneto" ] <- "nord est"
-  dfb$zone[dfb$`region`== "Friuli-Venezia Giulia" ] <- "nord est"
-  dfb$zone[dfb$`region`== "Emilia-Romagna" ] <- "nord est"
-  dfb$zone[dfb$`region`== "Valle d'Aosta" ] <- "nord ovest"
-  dfb$zone[dfb$`region`== "Lombardia" ] <- "nord ovest"
-  dfb$zone[dfb$`region`== "Piemonte" ] <- "nord ovest"
-  dfb$zone[dfb$`region`== "Liguria" ] <- "nord ovest"
-  
-  return(dfb$zone)
-}
 
+dfb$zone = NaN
 dfb$zone = getZones(dfb)
 table(dfb$zone)
+
+
+
+#SIZE
+palette = brewer.pal(length(unique(dfb$zone)),"Dark2")
+barplot(prop.table(table(dfb$`zone`,dfb$size), 1) , main='Failed in 2018 by zone',
+        xlab="Size",col=palette,  beside=TRUE)
+legend(15, 0.95, text.font=0.5,fill=palette,legend=c(unique(dfb$`zone`)),cex = 0.8)
+
+?legend
+
+for (zone in unique(dfb$zone)){
+  jpeg(str_c("img/B/Region/",zone,".jpg"))
+  df = dfb[dfb$zone == zone,]
+  n = length(unique(df$region))
+  if (n < 3){n = 3}          
+  palette = brewer.pal(n,"Dark2")
+  barplot(prop.table(table(df$region,df$size), 1) , main=str_c('Failed company in "',zone,'" in 2018'),
+          xlab="Size", col = palette,
+          legend = rownames(table(df$region,df$size)), beside=TRUE)
+  
+  dev.off()
+}
+
+
+#AGE
+
+palette = brewer.pal(length(unique(dfb$zone)),"Dark2")
+
+ggplot(dfb, aes(x=age, color=zone, legend=FALSE)) + geom_density(size=0.5, alpha=0.4)+
+  ggtitle(str_c('Failed companies by  zone of Italy')) 
+
+
+
+
+for (zone in unique(dfb$zone)){
+  
+  df = dfb[dfb$zone == zone,]
+  
+  ggplot(df, aes(x=age, fill=region)) + geom_density(alpha=0.2) +
+    ggtitle(str_c('Failed companies in "',zone,'" in 2018'))
+  ggsave(str_c("img/B/Region/age/",zone,".jpg"),dpi=300)
+  
+}
+
+
+#################################
+############ ATECO  #############
+
+
+
+dfb$ateconames = NaN
+dfb$ateconames = getAteco(dfb)
+table(dfb$ateconames)
+
+
+par(mfrow=c(5,4))
+
+
+
+for (ateco in unique(dfb$ATECO)){
+ # jpeg(str_c("img/B/ATECO/",zone,".jpg"))
+  df = dfb[dfb$ATECO == ateco,]
+  n = length(unique(df$ATECO10))
+  if (n < 3){n = 3}          
+  palette = brewer.pal(n,"Dark2")
+  barplot(prop.table(table(df$ATECO10,df$size), 1) , main=str_c('Failed company of  "',ateco,'" in 2018'),
+          xlab="Size", col = palette,
+          legend = rownames(table(df$region,df$size)), beside=TRUE)
+  
+ # dev.off()
+}
+
