@@ -113,20 +113,41 @@ dfb$ateconames = getAteco(dfb)
 table(dfb$ateconames)
 
 
-par(mfrow=c(5,4))
+par(mfrow=c(4,5))
 
+graphics.off()# par("mar") par(mar=c(1,1,1,1))
+colors = c("#023fa5", "#7d87b9", "#bec1d4", "#d6bcc0", "#bb7784", "#8e063b", "#4a6fe3", "#8595e1", "#b5bbe3", "#e6afb9", "#e07b91", "#d33f6a", "#11c638", "#8dd593", "#c6dec7", "#ead3c6", "#f0b98d", "#ef9708", "#0fcfc0", "#9cded6", "#d5eae7", "#f3e1eb", "#f6c4e1", "#f79cd4")
 
 
 for (ateco in unique(dfb$ATECO)){
- # jpeg(str_c("img/B/ATECO/",zone,".jpg"))
+  jpeg(str_c("img/B/ATECO/size/",str_sub(ateco, 1, 3),".jpg"))
   df = dfb[dfb$ATECO == ateco,]
   n = length(unique(df$ATECO10))
   if (n < 3){n = 3}          
-  palette = brewer.pal(n,"Dark2")
-  barplot(prop.table(table(df$ATECO10,df$size), 1) , main=str_c('Failed company of  "',ateco,'" in 2018'),
-          xlab="Size", col = palette,
-          legend = rownames(table(df$region,df$size)), beside=TRUE)
+ 
+  if (n<8){
+    barplot(prop.table(table(df$ATECO10,df$size), 1) , main=str_c('Failed company of  "',ateco,'" in 2018'),
+            xlab="Size", col = colors,legend = rownames(table(df$ATECO10,df$size)) ,beside=TRUE)
+    
+  }
+  else{
+    barplot(prop.table(table(df$ATECO10,df$size), 1) , main=str_c('Failed company of  "',ateco,'" in 2018'),
+            xlab="Size", col = colors ,beside=TRUE)
+    
+  legend(65, 1, text.font=0.5,ncol=3,fill=colors,legend = rownames(table(df$ATECO10,df$size)),cex = 0.8)
+  }
   
- # dev.off()
+  dev.off()
+}
+
+
+for (ateco in unique(dfb$ATECO)){
+  df = dfb[dfb$ATECO == ateco,]
+  n = length(unique(df$ATECO10))
+  ggplot(df, aes(x=age, fill=ATECO10)) + geom_density(alpha=0.2) +
+    ggtitle(str_c('Failed companies of "',ateco,'" in 2018'))
+  ggsave(str_c("img/B/ATECO/age/",str_sub(ateco, 1, 3),".jpg"),dpi=300)
+  
+
 }
 

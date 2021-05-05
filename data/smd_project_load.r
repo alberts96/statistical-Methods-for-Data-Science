@@ -167,7 +167,7 @@ df$`Legal form`[
                   df$'Legal form'!= "S.A.S."  &
                   df$'Legal form'!= "Consortium"] = 'Other'
 
-names(df)
+names(aida)
 
 
 rownames(df) = df$`Tax code number` #set tax code as index
@@ -175,3 +175,7 @@ dfAB = df[, c("Legal form", "active", "age", "region", "ateco","status","ATECO",
 
 
 write.csv(dfAB,"dfAB.csv")
+
+
+
+ggplot(aida, aes(x="Cash Flowth EURLast avail. yr", fill="Legal Form")) + geom_density(alpha=0.4)
