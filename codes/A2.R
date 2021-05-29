@@ -53,9 +53,9 @@ palette = brewer.pal(3,"Oranges")
 for (region in unique(dfA2$'region')){
   jpeg(str_c("img/A/2/Region/size/",region,".jpg"))
   df = dfA2[dfA2$`region`==region,]
-  barplot(prop.table(table(df$y,df$size), 1) , main=str_c('Failed company in "',region,'" by period'),
+  barplot(prop.table(table(df$period,df$size), 1) , main=str_c('Failed company in "',region,'" by period'),
           xlab="Size", col = palette,
-          legend = rownames(table(df$y,df$size)), beside=TRUE)
+          legend = rownames(table(df$period,df$size)), beside=TRUE)
   
   dev.off()
 }
@@ -63,7 +63,7 @@ for (region in unique(dfA2$'region')){
 
 
 ###################################
-### AGE GROUPED BARPLOT EXAPLE ###
+### AGE DISTRIBUTION EXAPLE ###
 ###################################
 dfA2$y = dfA2$year
 dfA2$year <- as.character(dfA2$year)
@@ -110,6 +110,61 @@ for (region in unique(dfA2$region)){
   ggplot(df[df$y>2013 & df$y<2019,], aes(x=age, color=year)) + geom_density(size=0.5, alpha=0.4)+
     ggtitle(str_c('Failed companies in "',region,'" in the last five years'))
   ggsave(str_c("img/A/2/Region/age/",region,"_last5.jpg"),dpi=300)
+  
+  
+  
+}
+
+
+
+###################################
+### CAPITAL DISTRIBUTION EXAPLE ###
+###################################
+dfA2$y = dfA2$year
+dfA2$year <- as.character(dfA2$year)
+
+ggplot(dfA2, aes(x=capital, fill=period)) + geom_density(alpha=0.4) + xlim(-100,100)
+# scale_fill_brewer(palette="Set1") 
+
+
+ggplot(dfA2[dfA2$y>2013 & dfA2$y<2019,], aes(x=capital, color=year)) + geom_density(size=1, alpha=0.4)
+
+
+
+
+##APPLY THIS IN A FOR LOOP FOR ALL LEGAL FORMS
+
+
+for (form in unique(dfA2$'Legal form')){
+  
+  df = dfA2[dfA2$`Legal form`==form,]
+  
+  ggplot(df, aes(x=capital, fill=period)) + geom_density(alpha=0.2)+ xlim(-100,100) +
+    ggtitle(str_c('Failed "',form,'" by period'))
+  ggsave(str_c("img/A/2/LegalForm/capital/",form,"_period.jpg"),dpi=300)
+  
+  ggplot(df[df$y>2013 & df$y<2019,], aes(x=capital, color=year)) + xlim(-100,100) + geom_density(size=0.5, alpha=0.4)+
+    ggtitle(str_c('Failed "',form,'" in the last five years'))
+  ggsave(str_c("img/A/2/LegalForm/capital/",form,"_last5.jpg"),dpi=300)
+  
+  
+  
+}
+
+
+##APPLY THIS IN A FOR ALL REGIONS
+
+for (region in unique(dfA2$region)){
+  
+  df = dfA2[dfA2$region==region,]
+  
+  ggplot(df, aes(x=capital, fill=period)) + geom_density(alpha=0.2) + xlim(-100,100)+
+    ggtitle(str_c('Failed companies in "',region,'" by period'))
+  ggsave(str_c("img/A/2/Region/capital/",region,"_period.jpg"),dpi=300)
+  
+  ggplot(df[df$y>2013 & df$y<2019,], aes(x=capital, color=year))+ xlim(-100,100) + geom_density(size=0.5, alpha=0.4)+
+    ggtitle(str_c('Failed companies in "',region,'" in the last five years'))
+  ggsave(str_c("img/A/2/Region/capital/",region,"_last5.jpg"),dpi=300)
   
   
   

@@ -48,6 +48,12 @@ ggplot(dfb, aes(x=age, color=legalform, legend=FALSE)) + geom_density(size=0.5, 
   ggtitle(str_c('Failed companies by  legal form')) 
   #(palette='Dark2')
 
+#CAPITAL
+
+ggplot(dfb, aes(x=capital, color=legalform, legend=FALSE)) + geom_density(size=0.5, alpha=0.4)+ xlim(-100,100)
+  ggtitle(str_c('Failed companies by  legal form')) 
+#(palette='Dark2')
+
 
 
 #################################
@@ -103,6 +109,26 @@ for (zone in unique(dfb$zone)){
 }
 
 
+
+
+#CAPITAL
+
+palette = brewer.pal(length(unique(dfb$zone)),"Dark2")
+
+
+
+
+for (zone in unique(dfb$zone)){
+  
+  df = dfb[dfb$zone == zone,]
+  
+  ggplot(df, aes(x=capital, fill=region)) + geom_density(alpha=0.2) + xlim(-100,100)
+    ggtitle(str_c('Failed companies in "',zone,'" in 2018'))
+  ggsave(str_c("img/B/Region/capital/",zone,".jpg"),dpi=300)
+  
+}
+
+
 #################################
 ############ ATECO  #############
 
@@ -151,3 +177,13 @@ for (ateco in unique(dfb$ATECO)){
 
 }
 
+
+for (ateco in unique(dfb$ATECO)){
+  df = dfb[dfb$ATECO == ateco,]
+  n = length(unique(df$ATECO10))
+  ggplot(df, aes(x=capital, fill=ATECO10)) + geom_density(alpha=0.2) + xlim(-100,100)
+    ggtitle(str_c('Failed companies of "',ateco,'" in 2018'))
+  ggsave(str_c("img/B/ATECO/capital/",str_sub(ateco, 1, 3),".jpg"),dpi=300)
+  
+  
+}

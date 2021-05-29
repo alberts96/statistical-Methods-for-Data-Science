@@ -10,8 +10,7 @@ table(df$year)
 year = 2018 #2018 is the most populet year
 dfA1 <- dfAB[dfAB$year==year,]
 dim(dfA1)
-
-
+names(dfA1)
 
 
  ###################################
@@ -39,7 +38,7 @@ for (form in unique(dfA1$'Legal form')){
 
 for (ateco in unique(dfA1$ATECO)){
   jpeg(str_c("img/A/1/ATECO/size/",str_sub(ateco, 1, 3),".jpg"))
-  df = dfA1[dfA1$`ATECO10`==ateco,]
+  df = dfA1[dfA1$`ATECO`==ateco,]
   barplot(prop.table(table(df$status,df$size), 1) , main=str_c('Active and failed for "',ateco,'" in ',year),
           xlab="Size", col=c("green3","red3"),
           legend = rownames(table(df$status,df$size)), beside=TRUE)
@@ -47,14 +46,15 @@ for (ateco in unique(dfA1$ATECO)){
   dev.off()
 }
 
+table(dfA1$ATECO)
 
 
 ###################################
 ### Distribution for age  ###
 ###################################
 
-p<-ggplot(dfA1, aes(x=age, fill=status)) + geom_density(alpha=0.4) + scale_fill_manual(values=c("#04bc3c", "#fc746c"))
-p
+ggplot(dfA1, aes(x=age, fill=status)) + geom_density(alpha=0.4) + scale_fill_manual(values=c("#04bc3c", "#fc746c"))
+
 
 
 ##APPLY THIS IN A FOR LOOP FOR ALL LEGAL FORMS
@@ -71,16 +71,56 @@ for (form in unique(dfA1$'Legal form')){
 }
 
 
+
 ##APPLY THIS IN A FOR LOOP FOR ALL ATECO CODES
 
 for (ateco in unique(dfA1$ATECO)){
   
-  df = dfA1[dfA1$`ATECO10`== ateco,]
+  df = dfA1[dfA1$`ATECO`== ateco,]
   
   ggplot(df, aes(x=age, fill=status)) + geom_density(alpha=0.4) +
     ggtitle(str_c('Active and failed for "',ateco,'" in ',year))+ 
     scale_fill_manual(values=c("#04bc3c", "#fc746c"))
   
   ggsave(str_c("img/A/1/ATECO/age/",str_sub(ateco, 1, 3),".jpg"))
+}
+
+
+
+
+###################################
+### Distribution for anet working capital  ###
+###################################
+
+ggplot(dfA1, aes(x=capital, fill=status)) + geom_density(alpha=0.4) + xlim(-100,100)+ scale_fill_manual(values=c("#04bc3c", "#fc746c"))
+
+
+
+##APPLY THIS IN A FOR LOOP FOR ALL LEGAL FORMS
+
+for (form in unique(dfA1$'Legal form')){
+  
+  df = dfA1[dfA1$`Legal form`==form,]
+  
+  ggplot(df, aes(x=capital, fill=status)) + geom_density(alpha=0.4) + xlim(-100,100) +
+    ggtitle(str_c('Active and failed for "',form,'" in ',year)) +
+    scale_fill_manual(values=c("#04bc3c", "#fc746c"))
+  
+  ggsave(str_c("img/A/1/LegalForm/capital/",form,".jpg"))
+}
+
+
+
+##APPLY THIS IN A FOR LOOP FOR ALL ATECO CODES
+
+for (ateco in unique(dfA1$ATECO)){
+  
+  df = dfA1[dfA1$`ATECO`== ateco,]
+  
+  ggplot(df, aes(x=capital, fill=status)) + geom_density(alpha=0.4) + xlim(-100,100)+
+    ggtitle(str_c('Active and failed for "',ateco,'" in ',year))+ 
+    scale_fill_manual(values=c("#04bc3c", "#fc746c"))
+  
+  ggsave(str_c("img/A/1/ATECO/capital/",str_sub(ateco, 1, 3),".jpg"))
 }
 
