@@ -1,0 +1,87 @@
+[1] "Consortium"
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.088766, p-value = 7.26e-06
+alternative hypothesis: two-sided
+
+[1] "S.R.L."
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.12442, p-value < 2.2e-16
+alternative hypothesis: two-sided
+
+[1] "S.P.A."
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.53812, p-value < 2.2e-16
+alternative hypothesis: two-sided
+
+[1] "S.R.L. one-person"
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.1422, p-value < 2.2e-16
+alternative hypothesis: two-sided
+
+[1] "S.C.A.R.L.P.A."
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.085451, p-value < 2.2e-16
+alternative hypothesis: two-sided
+
+[1] "S.R.L. simplified"
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.0042898, p-value = 0.9999
+alternative hypothesis: two-sided
+
+[1] "S.C.A.R.L."
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.15609, p-value < 2.2e-16
+alternative hypothesis: two-sided
+
+[1] "Social cooperative company"
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.34763, p-value < 2.2e-16
+alternative hypothesis: two-sided
+
+[1] "S.N.C."
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.034878, p-value = 1
+alternative hypothesis: two-sided
+
+[1] "S.A.S."
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.13914, p-value = 0.7563
+alternative hypothesis: two-sided
+
+[1] "Other"
+
+	Two-sample Kolmogorov-Smirnov test
+
+data:  df$size[df$status == "active"] and df$size[df$status == "failed"]
+D = 0.22854, p-value = 0.4309
+alternative hypothesis: two-sided
