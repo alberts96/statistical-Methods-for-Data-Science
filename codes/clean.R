@@ -20,7 +20,7 @@ df = df[!(df$`Legal status`=="Dissolved (demerger)"),]
 df = df[!(df$`Legal status`=="Dissolved (merger)"),]
 
 # Calculating the AGE
-df['age'] = df['Last accounting closing date']-df['Incorporation year']
+df['age'] = df['Last accounting closing date'] - df['Incorporation year']
 table(df$`age`)
 df=df[!(df$age < 0), ]
 
