@@ -75,9 +75,8 @@ ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=correlation)) +
 control <- trainControl(method="cv", number=10)
 metric <- c("Accuracy","recall")
 
-method = 'vglmAdjCat'
-sample(1:nrow(dfc), 50000)
-model <- train(status~., data=dfc[,attributes], method='LogitBoost', preProcess=(method = c("center", "scale")), trControl=control)
+
+model <- train(status~., data=dfc[sample(1:nrow(dfc), 50000),attributes], method='LogitBoost', preProcess=(method = c("center", "scale")), trControl=control)
 # estimate variable importance
 importance <- varImp(model, scale=FALSE)
 # summarize importance
@@ -86,10 +85,22 @@ print(importance)
 plot(importance)
 
 
+mostImportant = c("Cash.Flowth.EUR","Cost.of.debit.....", "Net.working.capitalth.EUR","EBITDAth.EUR" ,"Interest.Turnover....." , "Leverage"  ,"Solvency.ratio....."  ,"Return.on.equity..ROE.." )
+length(mostImportant
+)
 
+library(AppliedPredictiveModeling)
+transparentTheme(trans = .4)
 
+df = dfc[sample(1:nrow(dfc), 500),]
+featurePlot(x = dfc[, mostImportant], 
+            y = dfc$status, 
+            plot = "pairs",
+            ## Add a key at the top
+            auto.key = list(columns = 2))
 library(MASS)
-modellda <- lda(status ~ ., data=dfc[dfc,attributes])
+modellda <- lda(status ~ ., data=dfc[,attributes])
 
 modellda
 
+plot(modellda)
