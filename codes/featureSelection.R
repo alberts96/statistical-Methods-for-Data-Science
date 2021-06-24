@@ -74,9 +74,9 @@ ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=correlation)) +
 
 control <- trainControl(method="cv", number=10)
 metric <- c("Accuracy","recall")
+sample(1:nrow(dfc), 50000)
 
-
-model <- train(status~., data=dfc[sample(1:nrow(dfc), 50000),attributes], method='LogitBoost', preProcess=(method = c("center", "scale")), trControl=control)
+model <- train(status~., data=dfc[,attributes], method='lda', preProcess=(method = c("center", "scale")), trControl=control)
 # estimate variable importance
 importance <- varImp(model, scale=FALSE)
 # summarize importance
@@ -86,21 +86,45 @@ plot(importance)
 
 
 mostImportant = c("Cash.Flowth.EUR","Cost.of.debit.....", "Net.working.capitalth.EUR","EBITDAth.EUR" ,"Interest.Turnover....." , "Leverage"  ,"Solvency.ratio....."  ,"Return.on.equity..ROE.." )
-length(mostImportant
-)
+length(mostImportant)
 
 library(AppliedPredictiveModeling)
 transparentTheme(trans = .4)
 
-df = dfc[sample(1:nrow(dfc), 500),]
-featurePlot(x = dfc[, mostImportant], 
-            y = dfc$status, 
+df = dfc[sample(1:nrow(dfc), 1000), ]
+featurePlot(x = df[,mostImportant], 
+            y = df$status, 
             plot = "pairs",
             ## Add a key at the top
             auto.key = list(columns = 2))
+
+
+for (name in attributes){
+  if (name != 'status'){
+    dfc[,name] = as.numeric( dfc[,name])
+  }
+  
+}
+
 library(MASS)
-modellda <- lda(status ~ ., data=dfc[,attributes])
+modellda <- lda(status ~ ., data=dfc[,c(mostImportant,'status')], prior=2, prior = c(0.85,0.15))
 
 modellda
 
 plot(modellda)
+
+
+require(scales)
+prop.lda = r$svd^2/sum(r$svd^2)
+dataset = data.frame(status = dfc[,'status'], lda = modellda$x )
+ggplot(dfc) + geom_point(aes(modellda.LD1, modellda.LD2, colour = tatus, shape = status), size = 2.5) 
+
+
+### MULTICOLLINEARITA'####
+library(mctest)
+imcdiag(modellda)
+library(GGally)
+ggpairs(df[sample(1:nrow(dfc), 1000),mostImportant], legend=df$status)
+
+dim(df)
+
