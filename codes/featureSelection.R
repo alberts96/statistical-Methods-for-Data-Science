@@ -46,8 +46,11 @@ for (name in attributes[c(1:23)]){
   # ggsave(str_c("img/C/attributes/",name,".jpg"))
 }
 
+preproc.param <- dfc[,c(mostImportant,"status")] %>% 
+  preProcess(method = c("center", "scale"))
+dfcs = preproc.param %>% predict(dfc[,c(mostImportant,"status")]) 
 
-correlationMatrix <- cor(dfc[,2:23])
+correlationMatrix <- cov(dfcs[,mostImportant])
 # summarize the correlation matrix
 print(correlationMatrix)
 # find attributes that are highly corrected (ideally >0.75)
@@ -57,9 +60,9 @@ print(highlyCorrelated)
 
 library(reshape2)
 library(scales)
-melted_cormat <- melt(correlationMatrix,value.name='correlation')
+melted_cormat <- melt(correlationMatrix,value.name='covariance')
 head(melted_cormat)
-ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=correlation)) + 
+ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=covariance)) + 
   geom_tile()+theme(axis.text.x = element_text(angle = 40, hjust =1),axis.title.x=element_blank(),axis.title.y=element_blank())+
   scale_colour_gradient2( low = muted("red"),
                           mid = "white",
@@ -69,7 +72,7 @@ ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=correlation)) +
                           na.value = "grey50",
                           guide = "colourbar",
                           aesthetics = "fill")
-  ggsave("img/C/featureSelection/correlation.jpg",width=8.5,height = 7)
+  ggsave("img/C/featureSelection/covarianceMostImportant.jpg",width=8.5,height = 7)
 
 
 control <- trainControl(method="cv", number=10)
@@ -106,7 +109,13 @@ for (name in attributes){
   
 }
 
+
+
+###LDA
 library(MASS)
+
+model <- train(status~., data=dfc[,c(mostImportant,'status')], method='rf', preProcess=(method = c("center", "scale")), trControl=control)
+# estimate variable importance
 modellda <- lda(status ~ ., data=dfc[,c(mostImportant,'status')], prior=2, prior = c(0.85,0.15))
 
 modellda
@@ -114,17 +123,51 @@ modellda
 plot(modellda)
 
 
+#LOGICBOOST
+
+modellr <- train(status~., data=dfc[,c(mostImportant,"status")], method='LogitBoost', preProcess=(method = c("center", "scale")), trControl=control)
+
+
 require(scales)
+lr <- polr("status", data = dfc[,c(mostImportant,"status")],method = "logistic")
+glm.fit <- glm(status ~ Cash.Flowth.EUR + Cost.of.debit..... + Net.working.capitalth.EUR + Solvency.ratio..... +
+                  EBITDAth.EUR + Interest.Turnover..... + Leverage + Return.on.equity..ROE..  , data=dfcs[,c(mostImportant,"status")], family = binomial)
+
 prop.lda = r$svd^2/sum(r$svd^2)
 dataset = data.frame(status = dfc[,'status'], lda = modellda$x )
 ggplot(dfc) + geom_point(aes(modellda.LD1, modellda.LD2, colour = tatus, shape = status), size = 2.5) 
 
 
+
+
+
+
+### NORMALITA
+
+for (col in mostImportant){print(col)
+  print(col)
+  print(kurtosis(dfcs[,col]))
+  print(skewness(dfcs[,col]))
+}
+print(kurtosis(rnorm(nrow(dfcs),0,1)))
+print(skewness(rnorm(nrow(dfcs),0,1)))
 ### MULTICOLLINEARITA'####
 library(mctest)
 imcdiag(modellda)
 library(GGally)
-ggpairs(df[sample(1:nrow(dfc), 1000),mostImportant], legend=df$status)
+ggpairs(dfcs[sample(1:nrow(dfcs), 1000),mostImportant])
 
 dim(df)
+
+
+library(regclass)
+vif = VIF(glm.fit)
+
+
+
+### OMOGENEITA MULTIVARIATA 
+
+bartlettTest = bartlett.test(dfcs[,mostImportant], dfcs$status)
+
+
 
