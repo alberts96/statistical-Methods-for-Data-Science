@@ -159,7 +159,7 @@ prob.lr <- predict(fit.lr, test.transformed, type ='prob')
 ROCit_lr <- rocit(score=prob.lr$failed,class=test.transformed$status)
 
 
-classifierplots(ifelse(test.transformed$status == 'active',1,0),prob.lr$active)
+classifierplots(ifelse(test.transformed$status == 'active',0,1),prob.lr$failed)
 plot(ROCit_lr)
 ROCit_lrW <- rocit(score=prob.lr$failed,class=test.transformed$status)
 plot(ROCit_lr, col = c(5,'grey50'),legend=FALSE)

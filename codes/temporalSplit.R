@@ -14,6 +14,7 @@ library(moments)
 library(stringr)
 library(gbm)
 library(MLmetrics)
+library(classifierplots)
 install_github("Displayr/flipMultivariates")
 
 dim(dfc)
@@ -186,7 +187,7 @@ plot(ROCit_rf)
 #Calibration
 calibrate.plot(testrf.transformed$status, prob.rf$failed)
 
-classifierplots(ifelse(testrf.transformed$status == 'active',1,0),prob.rf$active)
+classifierplots(ifelse(testrf.transformed$status == 'active',0,1),prob.rf$failed)
 
 
 

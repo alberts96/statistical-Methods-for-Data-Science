@@ -117,8 +117,6 @@ df$`active`[df$`Legal status`== "Active"] = 1
 df$`active`[df$`Legal status`== "Active (default of payments)"] = 1
 df$`active`[df$`Legal status`== "Active (receivership)"] = 1
 
-table(df$`active`)
-
 df$status = "active"
 df$status[df$active == 0] = "failed"
 

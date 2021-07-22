@@ -91,3 +91,26 @@ for (region in unique(dfb$region)){
   
 }
 
+
+
+
+
+
+###########ZONES###########
+dfb$zone = NaN
+dfb$zone = getZones(dfb)
+table(dfb$zone)
+
+for (zone in unique(dfb$zone)){
+  print(str_replace(zone, ' ',''))
+  ggplot(dfb[dfb$zone==zone,], aes(x=age, fill=status))+ geom_density(position = position_fill())+
+    ggtitle(zone) + scale_fill_manual(values=c("#04bc3c", "#fc746c"))
+    ggsave(str_c("img/B/zone/age/",str_replace(zone, ' ',''),".jpg"))
+  
+  ggplot(dfb[dfb$zone==zone,], aes(x=size, fill=status))+ geom_bar(position = position_fill())+
+    ggtitle(zone)+scale_fill_manual(values=c("#04bc3c", "#fc746c"))
+    ggsave(str_c("img/B/zone/size/",str_replace(zone, ' ',''),".jpg"))
+  
+}
+
+
